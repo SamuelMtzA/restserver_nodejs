@@ -7,12 +7,12 @@ const Usuario = require("../models/usuario");
 // const { validationResult } = require("express-validator");
 
 const usuariosGet =async(req = request, res = reponse) => {
-  //argumonto limite es un string convertir a numero
+  //argumento limit es un string convertir a numero
   const {limit = 5, from = 0} = req.query;
   //indica el estado 
   const query = {estado: true};
   //paginacion
-  //contar los registros, realizar las promedas al mismo tiempo
+  //contar los registros, realizar las promesas al mismo tiempo
   const [total, usuarios] = await Promise.all([
     Usuario.countDocuments(query),
     Usuario.find(query)
