@@ -6,13 +6,23 @@ const Usuario = require("../models/usuario");
 //validacion de los datos
 // const { validationResult } = require("express-validator");
 
-const usuariosGet = (req = request, res = reponse) => {
-  const {q, nombre, limit = 10} = req.query;
+const usuariosGet =async(req = request, res = reponse) => {
+  //argumonto limite es un string convertir a numero
+  const {limit = 5, from = 0} = req.query;
+  //indica el estado 
+  const query = {estado: true};
+  //paginacion
+  //contar los registros, realizar las promedas al mismo tiempo
+  const [total, usuarios] = await Promise.all([
+    Usuario.countDocuments(query),
+    Usuario.find(query)
+    .limit(Number(limit))
+    .skip(Number(from))
+  ])
+
   res.json({
-    msg: "get API -controlador",
-    q,
-    nombre,
-    limit
+    total, 
+    usuarios
   });
 };
 
@@ -22,20 +32,9 @@ const usuariosPost = async(req, res = reponse) => {
   const {nombre, correo, password, role} = req.body;
   //creacion de la instancia del usuario
   const usuario = new Usuario({nombre, correo, password, role});
-  
-  //verificar si correo existe con express validator
-  const existeCorreo = await Usuario.findOne({correo});
-  if (existeCorreo) {
-    return res.status(400).json({msg: "El correo ya existe"});
-  }
-
-
   //encriptacion de la contraseña, salt numero de vueltas de encriptacion
   const salt = await bcrypt.genSalt(10);
   usuario.password = bcrypt.hashSync(password, salt);
-
-
-
 
   //guardar en la base de datos de mongo 
   await usuario.save();
@@ -46,20 +45,36 @@ const usuariosPost = async(req, res = reponse) => {
   });
 };
 
-const usuariosPut = (req, res = reponse) => {
+const usuariosPut = async(req, res = reponse) => {
   //id viene en los params ya parseado
   const { id } = req.params;
-  res.json({
-    msg: "put API -controlador",
-    id,
-  });
+  //respuesta desde el body
+  const { _id, google, password, correo, ...resto} = req.body;
+
+  //todo: validar contra la base de datos
+  if(password){
+    //encriptacion de la contraseña, salt numero de vueltas de encriptacion
+    const salt = bcrypt.genSaltSync(10);
+    resto.password = bcrypt.hashSync(password, salt);
+  }
+
+  const usuario = await Usuario.findByIdAndUpdate(id, resto, {new: true});
+
+
+  res.json(
+    usuario,
+  );
 };
 
-const usuariosDelete = (req, res = reponse) => {
-  res.json({
-    msg: "delete API -controlador",
-  });
-};
+const usuariosDelete = async(req, res = reponse) => {
+  const {id} = req.params;
+
+  //borrar fisicamente el registro, se pierde el registro
+  // const usuario = await Usuario.findByIdAndDelete( id );
+
+  const usuario = await Usuario.findByIdAndUpdate(id, {estado: false}, {new: true});
+  res.json(usuario);
+};  
 
 const usuariosPatch = (req, res = reponse) => {
     res.json({

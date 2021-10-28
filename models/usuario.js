@@ -32,5 +32,13 @@ const usuarioSchema = Schema({
         default: false
     }
 });
+//debe ser una funcion porque se hara uso del objeto this
+//metodo para que no se muestre la contraseña en la respuesta
+usuarioSchema.methods.toJSON = function(){
+    //sacar la version y el password y van a ser almacenados en el usuario
+    const {__v, password, ...usuario} = this.toObject();
+    return usuario;
+}
+
 //exportamos el modelo de usuario para poder usarlo en otras partes de la aplicacion 
 module.exports = model('Usuario', usuarioSchema);
