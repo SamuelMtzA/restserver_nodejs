@@ -71,8 +71,9 @@ const usuariosDelete = async(req, res = reponse) => {
 
   //borrar fisicamente el registro, se pierde el registro
   // const usuario = await Usuario.findByIdAndDelete( id );
-
+  //cambiar el estado del registro a false para que no se muestre en la lista
   const usuario = await Usuario.findByIdAndUpdate(id, {estado: false}, {new: true});
+
   res.json(usuario);
 };  
 

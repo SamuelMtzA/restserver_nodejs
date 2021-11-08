@@ -36,7 +36,9 @@ const usuarioSchema = Schema({
 //metodo para que no se muestre la contraseña en la respuesta
 usuarioSchema.methods.toJSON = function(){
     //sacar la version y el password y van a ser almacenados en el usuario
-    const {__v, password, ...usuario} = this.toObject();
+    const {__v, password, _id, ...usuario} = this.toObject();
+    //cambiar el _id generado por moongose por el uid
+    usuario.uid = _id;
     return usuario;
 }
 

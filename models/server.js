@@ -7,6 +7,8 @@ class Server {
     this.app = express();
     this.port = process.env.PORT;
     this.usuariosPath = '/api/users';
+    //nueva ruta para auntenticacion
+    this.authPath = '/api/auth';
 
     //conectar a la base de datos
     this.conectarDb();
@@ -31,7 +33,8 @@ class Server {
       this.app.use(cors());
   }
   routes() {
-    //configurar rutas con middleware condicional
+    //configurar rutas con middleware condicional, definiendo rutas
+    this.app.use(this.authPath, require('../routes/auth'))
     this.app.use(this.usuariosPath, require('../routes/users'))
   }
 
