@@ -5,5 +5,5 @@
 
 2. completing our rest-server to store users in a DB with mongoDB(config), creating our models for users and the server. Make our data-base validator for email, id and roles.
 
-3. 
+3. Adding a Json web token, some middlewares to verify and authenticate the user
 ```
