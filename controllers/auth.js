@@ -7,6 +7,7 @@ const { generarJWT } = require("../helpers/jwt");
 
 const login = async (req, res = response) => {
   const { correo, password } = req.body;
+  
   try {
     const usuarioDB = await Usuario.findOne({ correo });
     //si el usuario no existe en la base de datos
@@ -54,5 +55,5 @@ const login = async (req, res = response) => {
 };
 
 module.exports = {
-  login,
+  login
 };
