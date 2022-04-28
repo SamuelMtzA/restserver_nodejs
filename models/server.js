@@ -6,6 +6,7 @@ class Server {
   constructor() {
     this.app = express();
     this.port = process.env.PORT;
+    //rutaa de usuarios
     this.usuariosPath = '/api/users';
     //nueva ruta para auntenticacion
     this.authPath = '/api/auth';
@@ -24,12 +25,14 @@ class Server {
 
   middleware(){
       //use es usado para middlewares, directorio publico
+      //utilice el siguiente código para el servicio de imágenes, 
+      // archivos CSS y archivos JavaScript en un directorio denominado public
       this.app.use(express.static('public'))
 
       //lectura y parseo del body,cualquier informacion se cambia json
       this.app.use(express.json());
 
-      //Cors, permite o restringe recursos de un pagina web para ser resquets de otro dominio
+      //Cors, permite o restringe recursos de un pagina web para ser requests de otro dominio
       this.app.use(cors());
   }
   routes() {
