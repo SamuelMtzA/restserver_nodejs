@@ -2,8 +2,9 @@
 const Role = require("../models/role");
 const Usuario = require("../models/usuario");
 
+//checking the role of the user
 const isRoleValid = async (role = "") => {
-  //busca si existe el role
+  //busca si existe el role, con ayuda de moongoose
   const existeRole = await Role.findOne({ role });
   // si no existe el role
   if (!existeRole) {
