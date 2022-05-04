@@ -24,22 +24,23 @@
       </div>
       <script src="https://accounts.google.com/gsi/client" async defer></script>
       <script>
-        function handleCredentialResponse(response) {
+        async function handleCredentialResponse(response) {
            // decodeJwtResponse() is a custom function defined by you
            // to decode the credential response.
-         const bodyToken = {id_token: response.credential};
+            const bodyToken = {id_token: response.credential};
 
-
-         fetch('http://localhost:8080/api/auth/google', {
-            method: 'POST',
-            headers: {
-                  'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(bodyToken),
-         })
-         .then(response => response.json())
-         .then(data => console.log(data))
-         .catch(error => console.error(error))
+            try {
+               const res = await fetch('/api/google/login', {
+                  method: 'POST',
+                  headers: {
+                     'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(bodyToken)
+               });
+               console.log(res.data);
+            } catch (error) {
+               console.warn(error);
+            }
       
         }
       </script>
