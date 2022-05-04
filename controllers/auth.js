@@ -42,9 +42,6 @@ const login = async (req, res = response) => {
       token,
     });
     
-
-
-
   } catch (error) {
     //internal server error
     console.log(error);
@@ -54,6 +51,15 @@ const login = async (req, res = response) => {
   }
 };
 
+const googleSignIn = async (req, res = response) => {
+  const { id_token } = req.body;
+  res.json({
+    msg: "google sign in",
+    id_token,
+  });
+}
+
 module.exports = {
-  login
+  login,
+  googleSignIn,
 };
